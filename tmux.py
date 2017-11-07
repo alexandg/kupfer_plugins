@@ -19,7 +19,8 @@ __description__ = _("Manipulate tmux with Kupfer")
 __version__ = "0.1"
 __author__ = "Geoffrey Alexander <geoff.i.alexander@gmail.com>"
 
-from kupfer.objects import Source, TextLeaf, Leaf
+from kupfer.objects import Action, Leaf, Source
+from kupfer import utils
 
 import libtmux
 
@@ -56,3 +57,15 @@ class TmuxSessionLeaf(Leaf):
 
     def is_valid(self):
         return self.object in libtmux.Server().list_sessions()
+
+    def get_actions(self):
+        return (AttachSession(), )
+
+
+class AttachSession(Action):
+    def __init__(self):
+        super(AttachSession, self).__init__(_("Attach"))
+
+    def activate(self, leaf):
+        cmd = "tmux attach -t {}".format(leaf.object.name)
+        utils.spawn_in_terminal(cmd.split())
