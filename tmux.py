@@ -19,7 +19,7 @@ __description__ = _("Manipulate tmux with Kupfer")
 __version__ = "0.2"
 __author__ = "Geoffrey Alexander <geoff.i.alexander@gmail.com>"
 
-from kupfer.objects import Action, Leaf, Source
+from kupfer.objects import Action, Leaf, Source, TextLeaf
 from kupfer import utils
 
 import libtmux
@@ -59,7 +59,7 @@ class TmuxSessionLeaf(Leaf):
         return self.object in libtmux.Server().list_sessions()
 
     def get_actions(self):
-        return (AttachSession(), KillSession(), )
+        return (AttachSession(), KillSession(), RenameSession(), )
 
 
 class AttachSession(Action):
@@ -77,3 +77,20 @@ class KillSession(Action):
 
     def activate(self, leaf):
         leaf.object.kill_session()
+
+
+class RenameSession(Action):
+    def __init__(self):
+        super(RenameSession, self).__init__(_("Rename Session"))
+
+    def activate(self, leaf, obj):
+        leaf.object.rename_session(obj.object)
+
+    def requires_object(self):
+        return True
+
+    def object_types(self):
+        yield TextLeaf
+
+    def valid_object(self, obj, for_item):
+        return type(obj) == TextLeaf
