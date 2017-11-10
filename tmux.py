@@ -67,8 +67,8 @@ class AttachSession(Action):
         super(AttachSession, self).__init__(_("Attach to Session"))
 
     def activate(self, leaf):
-        cmd = "tmux attach -t {}".format(leaf.object.name)
-        utils.spawn_in_terminal(cmd.split())
+        cmd = ["tmux",  "attach",  "-t", "{}".format(leaf.object.name)]
+        utils.spawn_in_terminal(cmd)
 
 
 class KillSession(Action):
