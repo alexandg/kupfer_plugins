@@ -16,7 +16,7 @@ __kupfer_name__ = _("Tmux")
 __kupfer_actions__ = ("CreateSession", )
 __kupfer_sources__ = ("TmuxSessionSource", )
 __description__ = _("Control tmux with Kupfer")
-__version__ = "0.4"
+__version__ = "0.5"
 __author__ = "Geoffrey Alexander <geoff.i.alexander@gmail.com>"
 
 from kupfer.objects import Action, Leaf, Source, TextLeaf
