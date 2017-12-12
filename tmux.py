@@ -1,4 +1,3 @@
-# Tmux plugin for Kupfer to control tmux with Kupfer
 # Copyright (C) 2017 Geoffrey Alexander <geoff.i.alexander@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,13 +13,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 __kupfer_name__ = _("Tmux")
+__kupfer_actions__ = ("CreateSession", )
 __kupfer_sources__ = ("TmuxSessionSource", )
-__description__ = _("Manipulate tmux with Kupfer")
-__version__ = "0.3"
+__description__ = _("Control tmux with Kupfer")
+__version__ = "0.4"
 __author__ = "Geoffrey Alexander <geoff.i.alexander@gmail.com>"
 
 from kupfer.objects import Action, Leaf, Source, TextLeaf
 from kupfer import utils
+
+import os
 
 import libtmux
 
@@ -94,3 +96,19 @@ class RenameSession(Action):
 
     def valid_object(self, obj, for_item):
         return type(obj) == TextLeaf
+
+
+class CreateSession(Action):
+    def __init__(self):
+        Action.__init__(self, _("Create Tmux Session"))
+
+    def activate(self, leaf):
+        home_dir = os.path.expanduser('~')
+        libtmux.Server().new_session(leaf.object, attach=False,
+                                     start_directory=home_dir)
+
+    def item_types(self):
+        yield TextLeaf
+
+    def get_icon_name(self):
+        return "terminal"
