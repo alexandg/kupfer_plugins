@@ -97,7 +97,7 @@ def get_search_json(profile_dir):
     with open(search_path, "rb") as infile:
         if infile.read(len(MAGIC)) != MAGIC:
             return None
-        searchers = json.loads(lz4.block.decompress(infile.read()))
+        searchers = json.loads(lz4.frame.decompress(infile.read()))
     return searchers
 
 
