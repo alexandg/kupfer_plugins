@@ -24,7 +24,7 @@ __kupfer_name__ = _("Firefox Search Plugins")
 __kupfer_actions__ = ("FFSearchWithEngine", )
 __kupfer_sources__ = ("FFSearchSource", )
 __description__ = _("Search using Firefox search plugins")
-__version__ = "0.2"
+__version__ = "0.2.1"
 __author__ = "Geoffrey Alexander <geoff.i.alexander@gmail.com>"
 from kupfer.objects import Action, Leaf, Source, TextLeaf, TextSource
 from kupfer.obj.helplib import FilesystemWatchMixin
@@ -35,6 +35,12 @@ import configparser
 import json
 import lz4
 import os
+
+try:
+    import lz4.block
+    lz4_decompress = lz4.block.decompress
+except ImportError:
+    lz4_decompress = lz4.LZ4_uncompress
 
 
 MAGIC = b"mozLz40\0"
@@ -97,7 +103,7 @@ def get_search_json(profile_dir):
     with open(search_path, "rb") as infile:
         if infile.read(len(MAGIC)) != MAGIC:
             return None
-        searchers = json.loads(lz4.frame.decompress(infile.read()))
+        searchers = json.loads(lz4_decompress(infile.read()))
     return searchers
 
 
